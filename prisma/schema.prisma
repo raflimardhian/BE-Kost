@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id                   Int             @id @default(autoincrement())
+  email                String          @unique
+  password             String?
+  reset_password_token String?
+  room                 Room[]
+  role                 Role            @default(user)
+  payment              Payment[]
+  profile              Profile?
+  otp                  String?
+  googleID             String?
+  verified             Boolean?        @default(false)
+  expiration_time      DateTime?
+  createdAt            DateTime       @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Profile {
+  id              Int      @id @default(autoincrement())
+  name            String?
+  phone           String?
+  city            String?
+  address         String?
+  profile_picture String?
+  job             String?
+  userId          Int      @unique @map("user_id")
+  user            User     @relation(fields: [userId], references: [id])
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("profiles")
+}
+
+model Room{
+  id                   Int     @id @default(autoincrement())
+  number               String  @unique
+  time                 Int
+  image                Image[]
+  price                Int
+  description          String
+  payment              Payment[]
+  userId               Int?      @unique @map("user_id")
+  user                 User?     @relation(fields: [userId], references: [id])
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+
+  @@map("rooms")
+}
+
+model Image{
+  id                    Int     @id @default(autoincrement())
+  roomId                Int     @map("room_id")
+  room                  Room    @relation(fields: [roomId], references: [id])
+  imageUrl              String  
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime       @updatedAt @map("updated_at")
+  @@map("images")
+}
+
+model Payment {
+  id             Int              @id @default(autoincrement())
+  total_price    Int
+  payment_method String?
+  status         String           @default("UNPAID")
+  userId         Int              @map("user_id")
+  user           User             @relation(fields: [userId], references: [id])
+  roomId         Int              @map("room_id")
+  room           Room             @relation(fields: [roomId], references: [id])
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  @@map("payments")
+}
+
+
+enum Role {
+  admin
+  user
+}
