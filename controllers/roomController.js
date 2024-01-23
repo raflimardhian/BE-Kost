@@ -33,11 +33,9 @@ module.exports = {
         const { id } = req.params;
         const { number, time, price, description} = req.body;
     
-        // Validasi input
         if (!number || !time || !price || !description) {
           return res.status(400).json({ error: 'Semua field harus diisi' });
         }
-        // Cek apakah ruangan dengan ID yang diberikan sudah ada
         const existingRoom = await prisma.room.findUnique({
           where: {
             id: parseInt(id),
@@ -48,7 +46,6 @@ module.exports = {
           return res.status(404).json({ error: 'Ruangan dengan ID yang diberikan tidak ditemukan' });
         }
         
-        // Update data ruangan
         const updatedRoom = await prisma.room.update({
           where: {
             id: parseInt(id),
@@ -80,12 +77,10 @@ module.exports = {
       try {
         const roomId = parseInt(req.params.id);
     
-        // Validasi input
         if (isNaN(roomId)) {
           return res.status(400).json({ error: 'ID tidak valid' });
         }
     
-        // Cari ruangan berdasarkan ID
         const room = await prisma.room.findUnique({
           where: {
             id: roomId,
@@ -96,12 +91,10 @@ module.exports = {
           }
         });
     
-        // Jika ruangan tidak ditemukan
         if (!room) {
           return res.status(404).json({ error: 'Ruangan tidak ditemukan' });
         }
     
-        // Kirim data ruangan sebagai respons
         res.json(room);
       } catch (error) {
         console.error('Error:', error);
@@ -112,12 +105,10 @@ module.exports = {
       try {
         const roomId = parseInt(req.params.id, 10);
     
-        // Validasi input
         if (isNaN(roomId)) {
           return res.status(400).json({ error: 'ID tidak valid' });
         }
     
-        // Hapus data berdasarkan ID
         const deletedRoom = await room.delete({
           where: {
             id: roomId,
