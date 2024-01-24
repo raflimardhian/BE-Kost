@@ -13,13 +13,6 @@ app.use(express.json({ strict: false }));
 app.use(morgan("dev"));
 app.use(cors());
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST');
-  res.header('Access-Control-Allow-Headers', 'Authorization');
-  next();
-});
-
 app.use("/api/v1", router);
 app.use(express.static(path.join(__dirname, "views")));
 app.set("views", path.join(__dirname, "views"));
