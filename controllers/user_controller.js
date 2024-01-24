@@ -11,7 +11,6 @@ const nodemailer = require("../utils/index");
 
 function AddMinutesToDate(date, minutes, seconds) {
   return new Date(date.getTime() + minutes * 60000);
-  // return new Date(date.getTime() + seconds * 1000);
 }
 // function AddSecondsToDate(date, seconds) {
 //   return new Date(date.getTime() + seconds * 1000);
@@ -96,7 +95,6 @@ module.exports = {
           data: {
             otp,
             expiration_time: AddMinutesToDate(new Date(), 5),
-            // expiration_time: AddSecondsToDate(new Date(), 30),
           },
         });
 
@@ -108,10 +106,6 @@ module.exports = {
         });
       } catch (err) {
         next(err);
-        // return res.status(500).json({
-        //   status: 'failed',
-        //   message: 'Gagal mengirim email verifikasi. Silahkan coba lagi nanti.'
-        // });
       }
     }else {
       const { message } = val.error.details[0];
@@ -129,15 +123,12 @@ module.exports = {
         where: { email },
       });
 
-      const loginId = loginUser.id;
+
+      // const loginId = loginUser.id;
 
       const user = await prisma.user.findFirst({
         where: { email },
       });
-
-      // const room = await prisma.room.findFirst({
-      //   where: { loginId },
-      // });
 
       if (!user) {
         return res.status(404).json({
@@ -185,11 +176,13 @@ module.exports = {
         token,
       });
     } catch (error) {
+      console.log(err)
       res.status(500).json({
         status: "failed",
         message: error.message,
       });
     }
+    
   },
   loginAdmin: async (req, res, next) => {
     try {
@@ -397,8 +390,6 @@ module.exports = {
           userId: parseInt(id),
         },
       });
-
-      // Hapus notifikasi jika ada
 
       if (existingProfile) {
         await prisma.profile.delete({
