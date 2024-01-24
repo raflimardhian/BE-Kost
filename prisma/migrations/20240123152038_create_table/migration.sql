@@ -85,9 +85,6 @@ CREATE UNIQUE INDEX "rooms_number_key" ON "rooms"("number");
 -- CreateIndex
 CREATE UNIQUE INDEX "rooms_user_id_key" ON "rooms"("user_id");
 
--- CreateIndex
-CREATE UNIQUE INDEX "payments_room_id_key" ON "payments"("room_id");
-
 -- AddForeignKey
 ALTER TABLE "profiles" ADD CONSTRAINT "profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
