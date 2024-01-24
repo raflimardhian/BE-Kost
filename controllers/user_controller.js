@@ -310,10 +310,6 @@ module.exports = {
           });
         }
       } else {
-        res.status(500).json({
-          status: "failed",
-          message: err.message,
-        });
       }
     } catch (err) {
       console.log(err)
