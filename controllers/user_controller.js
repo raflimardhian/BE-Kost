@@ -284,16 +284,16 @@ module.exports = {
   },
   verify: async (req, res) => {
     try {
-      const { otp } = req.body;
+      const { otp, email } = req.body;
       const existingUser = await prisma.user.findFirst({
-        where: { otp },
+        where: { email },
       });
       // const userId = existingUser.id;
       if (existingUser) {
         if ((existingUser.otp === otp) && (Date.parse(existingUser.expiration_time) > Date.parse(new Date()))) {
           await prisma.user.update({
             where: {
-              email: existingUser.email,
+              email: email,
             },
             data: {
               verified: true,
