@@ -288,12 +288,12 @@ module.exports = {
       const existingUser = await prisma.user.findFirst({
         where: { otp },
       });
-      const userId = existingUser.id;
+      // const userId = existingUser.id;
       if (existingUser) {
         if ((existingUser.otp === otp) && (Date.parse(existingUser.expiration_time) > Date.parse(new Date()))) {
           await prisma.user.update({
             where: {
-              id: userId,
+              id: existingUser.id,
               email: existingUser.email,
             },
             data: {
@@ -317,6 +317,7 @@ module.exports = {
         });
       }
     } catch (err) {
+      console.log(err)
       res.status(400).json({
         status: "failed",
         message: err.message,
