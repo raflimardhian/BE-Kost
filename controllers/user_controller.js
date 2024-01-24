@@ -288,12 +288,12 @@ module.exports = {
       const existingUser = await prisma.user.findFirst({
         where: { otp },
       });
-      // const userId = existingUser.id;
+      const userId = existingUser.id;
       if (existingUser) {
         if ((existingUser.otp === otp) && (Date.parse(existingUser.expiration_time) > Date.parse(new Date()))) {
           await prisma.user.update({
             where: {
-              id: existingUser.id,
+              id: userId,
               email: existingUser.email,
             },
             data: {
@@ -305,6 +305,7 @@ module.exports = {
             message: "Anda Berhasil Verifikasi",
           });
         } else {
+          console.log(err)
           res.status(409).json({
             status: "failed",
             message: "Periksa kembali otp anda",
