@@ -293,7 +293,6 @@ module.exports = {
         if ((existingUser.otp === otp) && (Date.parse(existingUser.expiration_time) > Date.parse(new Date()))) {
           await prisma.user.update({
             where: {
-              id: existingUser.id,
               email: existingUser.email,
             },
             data: {
