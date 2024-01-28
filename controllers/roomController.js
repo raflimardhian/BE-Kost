@@ -122,6 +122,11 @@ module.exports = {
           where: {
             id: roomId,
           },
+          include: {
+            payment: true,
+            image: true,
+            user: true
+          }
         });
     
         res.json(deletedRoom);
