@@ -36,10 +36,14 @@ module.exports = {
                     message: `Kamar sudah terisi`,
                 });
             }
+            const originalPrice = Number(room.price);
+            const ppnRate = 0.11;
+            const ppnAmount = originalPrice * ppnRate;
+            const totalPrice = originalPrice + ppnAmount;
         
             let newPayment = await prisma.payment.create({
                 data: {
-                total_price: Number(room.price),
+                total_price:totalPrice,
                 roomId: room.id,
                 userId: Number(req.user.id),
                 payment_method,
