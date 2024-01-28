@@ -67,7 +67,10 @@ module.exports = {
     getRooms: async (req, res) => {
       try {
         const rooms = await room.findMany({
-          include: {image:true}
+          include: {
+            image:true,
+            user: true
+          }
         });
         res.json(rooms);
       } catch (error) {
