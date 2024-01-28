@@ -118,7 +118,7 @@ module.exports = {
           return res.status(400).json({ error: 'ID tidak valid' });
         }
     
-        const deletedRoom = await room.delete({
+        const roomDetails = await room.delete({
           where: {
             id: roomId,
           },
@@ -127,6 +127,22 @@ module.exports = {
             image: true,
             user: true
           }
+        });
+
+        if (!roomDetails) {
+          return res.status(404).json({ error: 'Kamar tidak ditemukan' });
+        }
+
+        await prisma.image.deleteMany({
+          where: {
+            roomId: roomId,
+          },
+        });
+    
+        const deletedRoom = await room.delete({
+          where: {
+            id: roomId,
+          },
         });
     
         res.json(deletedRoom);
