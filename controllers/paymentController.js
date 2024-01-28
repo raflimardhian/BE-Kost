@@ -56,7 +56,7 @@ module.exports = {
             let parameter = {
                 transaction_details: {
                 order_id: newPayment.id + 100,
-                gross_amount: room.price,
+                gross_amount: totalPrice,
                 },
                 credit_card: {
                 secure: true,
