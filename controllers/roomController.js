@@ -69,7 +69,7 @@ module.exports = {
         const rooms = await room.findMany({
           include: {
             image:true,
-            user: true
+            profile: true
           }
         });
         res.json(rooms);
