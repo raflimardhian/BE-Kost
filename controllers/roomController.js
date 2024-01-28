@@ -66,7 +66,9 @@ module.exports = {
     },
     getRooms: async (req, res) => {
       try {
-        const rooms = await room.findMany();
+        const rooms = await room.findMany({
+          include: {image:true}
+        });
         res.json(rooms);
       } catch (error) {
         console.error('Error:', error);
