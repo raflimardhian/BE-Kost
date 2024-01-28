@@ -18,7 +18,11 @@ module.exports = {
                 isProduction: false,
                 serverKey: process.env.PAYMENT_SERVER_KEY,
             });
-        
+            
+            function generateOrderId(paymentId) {
+                const timestamp = new Date().getTime();
+                return `ORDER-${paymentId}-${timestamp}`;
+            }
             const user = await prisma.user.findUnique({
                 where: { id: Number(req.user.id) },
                 include: {
@@ -55,7 +59,7 @@ module.exports = {
         
             let parameter = {
                 transaction_details: {
-                order_id: newPayment.id + 100,
+                order_id: generateOrderId(newPayment.id),
                 gross_amount: totalPrice,
                 },
                 credit_card: {
