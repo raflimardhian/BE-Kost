@@ -148,7 +148,7 @@ module.exports = {
         }
 
         if (existingPayment) {
-          await prisma.payment.delete({
+          await prisma.payment.deleteMany({
             where: {
               id: existingPayment.id,
             },
