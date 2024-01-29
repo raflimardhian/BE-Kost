@@ -112,43 +112,62 @@ module.exports = {
     },
     delete: async (req, res) => {
       try {
-        const roomId = parseInt(req.params.id, 10);
-    
-        if (isNaN(roomId)) {
-          return res.status(400).json({ error: 'ID tidak valid' });
-        }
-    
-        const roomDetails = await room.delete({
+        const roomId = parseInt(req.params.id);
+
+        const existingRoom = await prisma.room.findUnique({
           where: {
             id: roomId,
           },
-          include: {
-            payment: true,
-            image: true,
-            user: true
-          }
         });
 
-        if (!roomDetails) {
-          return res.status(404).json({ error: 'Kamar tidak ditemukan' });
+        if (!existingRoom) {
+          return res.status(404).json({ error: 'Room tidak ditemukan di database' });
         }
-
-        await prisma.image.deleteMany({
+    
+        if (!roomId) {
+          return res.status(400).json({ error: 'ID tidak valid' });
+        }
+        const imageRoom = await prisma.image.findMany({
           where: {
             roomId: roomId,
           },
         });
+
+        const existingPayment = await prisma.payment.findFirst({
+          where:{
+            roomId:roomId
+          }
+        })
+
+        if(imageRoom.length > 0){
+          await prisma.image.deleteMany({
+            where: {
+              roomId: roomId,
+            },
+          })
+        }
+
+        if (existingPayment) {
+          await prisma.payment.delete({
+            where: {
+              id: existingPayment.id,
+            },
+          });
+        }
     
-        const deletedRoom = await room.delete({
+        await prisma.room.deleteMany({
           where: {
             id: roomId,
           },
         });
     
-        res.json(deletedRoom);
+        res.status(200).json({
+          status: "success",
+          message: `Room dengan ID ${roomId} berhasil dihapus`,
+        });
       } catch (error) {
         console.error('Error:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan server' });
+        res.status(500).json({ error: error.message });
       }
     },
     

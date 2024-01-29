@@ -394,6 +394,21 @@ module.exports = {
           },
         });
       }
+
+      const existingPayment = await prisma.payment.findFirst({
+        where:{
+          userId:parseInt(id)
+        }
+      })
+
+      if (existingPayment) {
+        await prisma.payment.delete({
+          where: {
+            id: existingPayment.id,
+          },
+        });
+      }
+
       await prisma.user.delete({
         where: {
           id: parseInt(id),
