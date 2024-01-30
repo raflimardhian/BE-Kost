@@ -16,7 +16,7 @@ module.exports = {
         const room = await prisma.room.create({
           data: {
             number,
-            time,
+            time:30,
             price,
             description,
           },
