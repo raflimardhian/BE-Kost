@@ -19,7 +19,7 @@ module.exports = {
         console.log(number, imageUrl, price, description);
 
 
-        const parsePrice = parseInt(number, 10)
+        const parsePrice = parseInt(price, 10)
 
         // if (!number || !imageUrl || !price || !description) {
         //   return res.status(400).json({ error: 'Semua field harus diisi' });
@@ -43,11 +43,21 @@ module.exports = {
     updateRoom : async (req, res) => {
       try {
         const { id } = req.params;
-        const { number, time, price, description} = req.body;
+        const { number, imageUrl, price, description} = req.body;
+
+        const fileTostring = req.file.buffer.toString("base64");
     
-        if (!number || !time || !price || !description) {
-          return res.status(400).json({ error: 'Semua field harus diisi' });
-        }
+        const uploadFile = await utils.imageKit.upload({
+          fileName: req.file.originalname,
+          file: fileTostring,
+        });
+
+        const parsePrice = parseInt(price, 10)
+
+    
+        // if (!number || !imageUrl || !price || !description) {
+        //   return res.status(400).json({ error: 'Semua field harus diisi' });
+        // }
         const existingRoom = await prisma.room.findUnique({
           where: {
             id: parseInt(id),
@@ -64,8 +74,8 @@ module.exports = {
           },
           data: {
             number,
-            time,
-            price,
+            imageUrl: uploadFile.url,
+            price: parsePrice,
             description,
           },
         });
@@ -107,7 +117,6 @@ module.exports = {
             id: roomId,
           },
           include:{
-            image: true,
             user: true
           }
         });
@@ -139,25 +148,12 @@ module.exports = {
         if (!roomId) {
           return res.status(400).json({ error: 'ID tidak valid' });
         }
-        const imageRoom = await prisma.image.findMany({
-          where: {
-            roomId: roomId,
-          },
-        });
 
         const existingPayment = await prisma.payment.findFirst({
           where:{
             roomId:roomId
           }
         })
-
-        if(imageRoom.length > 0){
-          await prisma.image.deleteMany({
-            where: {
-              roomId: roomId,
-            },
-          })
-        }
 
         if (existingPayment) {
           await prisma.payment.deleteMany({
