@@ -94,4 +94,97 @@ module.exports = {
             next(err);
         }
     },
+
+    handlePaymentNotification: async (req, res) => {
+        try {
+            let notification = {
+                currency: req.body.currency,
+                fraud_status: req.body.fraud_status,
+                gross_amount: req.body.gross_amount,
+                order_id: req.body.order_id,
+                payment_type: req.body.payment_type,
+                status_code: req.body.status_code,
+                status_message: req.body.status_message,
+                transaction_id: req.body.transaction_id,
+                transaction_status: req.body.transaction_status,
+                transaction_time: req.body.transaction_time,
+                merchant_id: req.body.merchant_id,
+            };
+        
+            let data = await snap.transaction.notification(notification);
+        
+            const updatedPayment = await prisma.payment.update({
+                where: { id: data.order_id },
+                data: {
+                status: "PAID",
+                payment_method: data.payment_type,
+                updatedAt: new Date()
+                },
+            });
+        
+            res.status(200).json({
+                status: true,
+                message: "",
+                data: { updatedPayment },
+            });
+            } catch (err) {
+                next(err);
+            }
+    },
+
+    deletePayment: async (req, res, next) => {
+        try {
+            const roomId = req.params.id;
+    
+            const existingPayment = await prisma.payment.findFirst({
+                where: {
+                    roomId: Number(roomId),
+                },
+            });
+    
+            if (!existingPayment) {
+                return res.status(404).json({
+                    status: "failed",
+                    message: `Pembayaran dengan id room ${roomId} tidak ditemukan.`,
+                });
+            }
+    
+            await prisma.payment.delete({
+                where: {
+                    id: existingPayment.id,
+                },
+            });
+    
+            await prisma.room.update({
+                where: {
+                    id: Number(roomId),
+                },
+                data: {
+                    userId: null, 
+                },
+            });
+    
+            res.status(200).json({
+                status: "success",
+                message: "Pembayaran berhasil dihapus dan status kamar dikembalikan.",
+            });
+        } catch (err) {
+            console.log(error)
+            next(err);
+        }
+    },
+
+    getPayment: async (req, res, next) => {
+        try{
+            const payments = await prisma.payment.findMany()
+
+            res.status(200).json({
+                status: "success",
+                message: "Berhasil menampilkan data payment.",
+                payments
+            });
+        } catch (err){
+            next(err)
+        }
+    }
 }
