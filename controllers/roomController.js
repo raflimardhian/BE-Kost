@@ -8,6 +8,8 @@ module.exports = {
     createRoom: async (req, res) => {
       try {
         const { number, time, price, description} = req.body;
+
+        const roomTime = 30;
     
         if (!number || !time || !price || !description) {
           return res.status(400).json({ error: 'Semua field harus diisi' });
@@ -16,7 +18,7 @@ module.exports = {
         const room = await prisma.room.create({
           data: {
             number,
-            time:30,
+            time: roomTime,
             price,
             description,
           },
