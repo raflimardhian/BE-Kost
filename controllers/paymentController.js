@@ -173,6 +173,20 @@ module.exports = {
             next(err);
         }
     },
+    deleteManyPayments: async (req, res, next) => {
+        try {
+            const deletedPayments = await prisma.payment.deleteMany();
+    
+            res.status(200).json({
+                status: "success",
+                message: "Semua payment berhasil dihapus.",
+                data: deletedPayments,
+            });
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    },
 
     getPayment: async (req, res, next) => {
         try{
