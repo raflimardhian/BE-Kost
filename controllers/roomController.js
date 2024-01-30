@@ -90,7 +90,6 @@ module.exports = {
       try {
         const rooms = await room.findMany({
           include: {
-            image:true,
             user: {
               include: {
                 profile: true
