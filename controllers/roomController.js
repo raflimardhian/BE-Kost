@@ -16,12 +16,14 @@ module.exports = {
           fileName: req.file.originalname,
           file: fileTostring,
         });
+        console.log(number, imageUrl, price, description);
+
 
         const parsePrice = parseInt(number, 10)
 
-        if (!number || !imageUrl || !price || !description) {
-          return res.status(400).json({ error: 'Semua field harus diisi' });
-        }
+        // if (!number || !imageUrl || !price || !description) {
+        //   return res.status(400).json({ error: 'Semua field harus diisi' });
+        // }
     
         const room = await prisma.room.create({
           data: {
