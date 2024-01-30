@@ -4,21 +4,27 @@ const prisma = new PrismaClient();
 const { room, user, image } = require('../models/index')
 const utils = require('../utils/index')
 
+
 module.exports = {
     createRoom: async (req, res) => {
       try {
-        const { number, time, price, description} = req.body;
-
-        const roomTime = 30;
+        const { number, imageUrl, price, description} = req.body;
+        
+        const fileTostring = req.file.buffer.toString("base64");
     
-        if (!number || !time || !price || !description) {
+        const uploadFile = await utils.imageKit.upload({
+          fileName: req.file.originalname,
+          file: fileTostring,
+        });
+
+        if (!number || !imageUrl || !price || !description) {
           return res.status(400).json({ error: 'Semua field harus diisi' });
         }
     
         const room = await prisma.room.create({
           data: {
             number,
-            time: roomTime,
+            imageUrl:uploadFile.url,
             price,
             description,
           },
