@@ -38,7 +38,7 @@ CREATE TABLE "profiles" (
 CREATE TABLE "rooms" (
     "id" SERIAL NOT NULL,
     "number" TEXT NOT NULL,
-    "time" INTEGER NOT NULL,
+    "imageUrl" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
     "user_id" INTEGER,
@@ -46,17 +46,6 @@ CREATE TABLE "rooms" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "rooms_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "images" (
-    "id" SERIAL NOT NULL,
-    "room_id" INTEGER NOT NULL,
-    "imageUrl" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "images_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -90,9 +79,6 @@ ALTER TABLE "profiles" ADD CONSTRAINT "profiles_user_id_fkey" FOREIGN KEY ("user
 
 -- AddForeignKey
 ALTER TABLE "rooms" ADD CONSTRAINT "rooms_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "images" ADD CONSTRAINT "images_room_id_fkey" FOREIGN KEY ("room_id") REFERENCES "rooms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "payments" ADD CONSTRAINT "payments_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
