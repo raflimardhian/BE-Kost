@@ -17,6 +17,8 @@ module.exports = {
           file: fileTostring,
         });
 
+        const parsePrice = parseInt(number, 10)
+
         if (!number || !imageUrl || !price || !description) {
           return res.status(400).json({ error: 'Semua field harus diisi' });
         }
@@ -25,7 +27,7 @@ module.exports = {
           data: {
             number,
             imageUrl:uploadFile.url,
-            price,
+            price: parsePrice,
             description,
           },
         });
