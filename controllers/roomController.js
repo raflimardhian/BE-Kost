@@ -7,15 +7,16 @@ const utils = require('../utils/index')
 module.exports = {
     createRoom: async (req, res) => {
       try {
-        const { number, price, description} = req.body;
+        const { number, time, price, description} = req.body;
     
-        if (!number || !price || !description) {
+        if (!number || !time || !price || !description) {
           return res.status(400).json({ error: 'Semua field harus diisi' });
         }
     
         const room = await prisma.room.create({
           data: {
             number,
+            time,
             price,
             description,
           },
@@ -30,9 +31,9 @@ module.exports = {
     updateRoom : async (req, res) => {
       try {
         const { id } = req.params;
-        const { number, price, description} = req.body;
+        const { number, time, price, description} = req.body;
     
-        if (!number || !price || !description) {
+        if (!number || !time || !price || !description) {
           return res.status(400).json({ error: 'Semua field harus diisi' });
         }
         const existingRoom = await prisma.room.findUnique({
@@ -51,6 +52,7 @@ module.exports = {
           },
           data: {
             number,
+            time,
             price,
             description,
           },
