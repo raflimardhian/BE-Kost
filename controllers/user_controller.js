@@ -485,7 +485,7 @@ module.exports = {
         },
       });
 
-      const resetLink = `localhost:3000/insert-password?token=${resetToken}`;
+      const resetLink = `https://kost-tebet-sawo.vercel.app/insert-password?token=${resetToken}`;
 
       await nodemailer.sendEmail(email, "Email Activation", `silahkan klik link berikut ini untuk mengganti password ${resetLink}`);
 
