@@ -9,7 +9,9 @@ const checkRole = require("../middleware/checkRole")
 
 
 router.post('/', controller.create)
-router.get('/', controller.getAll)
+router.get('/', checkToken,controller.getAll)
 router.put('/', checkToken,upload.single("profile_picture"), controller.update)
+router.get('/:id',checkToken, controller.getId)
+
 
 module.exports = router;
