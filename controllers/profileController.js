@@ -43,13 +43,13 @@ module.exports = {
       } = req.body;
       const fileTostring = req.file.buffer.toString("base64");
 
-      const userId = req.params.id;
+      const userId = req.user.id;
       const uploadFile = await utils.imageKit.upload({
         fileName: req.file.originalname,
         file: fileTostring,
       });
 
-      const profiles = await profile.update({
+      const profiles = await prisma.profile.update({
         where: {
           id: Number(userId),
         },
