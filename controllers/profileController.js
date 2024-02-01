@@ -106,11 +106,12 @@ module.exports = {
           user: true,
         },
       });
-
-      return res.status(200).json({
-        status: "success",
-        profiles: allProfiles,
-      });
+      
+      res.json(allProfiles);
+      // return res.status(200).json({
+      //   status: "success",
+      //   allProfiles
+      // });
     } catch (error) {
       res.status(500).json({
         status: "failed",
