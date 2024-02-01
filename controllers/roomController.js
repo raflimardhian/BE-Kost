@@ -97,7 +97,10 @@ module.exports = {
             }
           }
         });
-        res.json(rooms);
+         return res.status(200).json({
+          status: "success",
+          rooms
+        });
       } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan server' });
