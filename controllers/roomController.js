@@ -99,7 +99,7 @@ module.exports = {
         });
          return res.status(200).json({
           status: "success",
-          rooms
+          room: rooms
         });
       } catch (error) {
         console.error('Error:', error);
