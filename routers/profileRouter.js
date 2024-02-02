@@ -12,6 +12,7 @@ router.post('/', controller.create)
 router.get('/', checkToken,controller.getAll)
 router.put('/', checkToken,upload.single("profile_picture"), controller.update)
 router.get('/:id',checkToken, controller.getId)
+router.put('/:id', checkToken,upload.single("profile_picture"), controller.updateByParams)
 
 
 module.exports = router;

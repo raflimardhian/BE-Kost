@@ -71,6 +71,41 @@ module.exports = {
       next(error);
     }
   },
+  updateByParams: async (req, res, next) => {
+    try {
+      const {
+        name, phone, city, address, profile_picture, job
+      } = req.body;
+      const fileTostring = req.file.buffer.toString("base64");
+
+      const userId = req.params.id;
+      const uploadFile = await utils.imageKit.upload({
+        fileName: req.file.originalname,
+        file: fileTostring,
+      });
+
+      const profiles = await prisma.profile.update({
+        where: {
+          id: Number(userId),
+        },
+        data: {
+          name,
+          phone,
+          city,
+          job,
+          address,
+          profile_picture: uploadFile.url,
+        },
+      });
+
+      return res.status(200).json({
+        status: "success",
+        profiles,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
   getId: async (req, res) => {
     try {
       const getProfile = await profile.findUnique({
