@@ -134,6 +134,36 @@ module.exports = {
       });
     }
   },
+  getParamsId: async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const getProfile = await profile.findUnique({
+        where: {
+          id:id,
+        },
+        include: {
+          user: true,
+        },
+      });
+      if (!getProfile) {
+        return res.status(404).json({
+          status: "failed",
+          message: `Pengguna dengan ID ${id} tidak ditemukan`,
+        });
+      }
+
+      return res.status(200).json({
+        status: "succes",
+        getProfile,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: "failed",
+        message: error.message,
+      });
+    }
+  },
+
   getAll: async (req, res) => {
     try {
       const allProfiles = await profile.findMany({
